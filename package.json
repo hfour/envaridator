@@ -1,0 +1,31 @@
+{
+  "name": "envoi",
+  "version": "1.0.0",
+  "description": "Environment variable validator for TypeScript",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinuninu/envoi.git"
+  },
+  "keywords": [
+    "envoi",
+    "validator",
+    "toi",
+    "environment",
+    "validaiton"
+  ],
+  "author": "tinuninu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinuninu/envoi/issues"
+  },
+  "homepage": "https://github.com/tinuninu/envoi#readme",
+  "dependencies": {
+    "@toi/toi": "^1.0.5",
+    "@types/node": "^10.12.7",
+    "typescript": "^3.1.6"
+  }
+}
