@@ -15,9 +15,9 @@
     "validator",
     "toi",
     "environment",
-    "validaiton"
+    "validation"
   ],
-  "author": "tinuninu",
+  "author": "Hristijan Lubeski",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tinuninu/envoi/issues"
