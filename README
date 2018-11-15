@@ -1,4 +1,39 @@
 envoi
 =====
 
-An environment variable validator that uses https://github.com/sd/toi for validation.
+Envoi is a tiny environment variable validator that uses 
+https://github.com/sd/toi for validation.
+
+It's main purpose is to enable more clean approach when validating environment variables.
+
+Using it is pretty straightforward:
+
+```
+let envoi = new Envoi();
+
+export const VARIABLE1 = envoi.registerVariable('VARIABLE1', toi.required().and(toi.num.is())); // SHOULD FAIL
+export const VARIABLE2 = envoi.registerVariable('VARIABLE2', toi.required().and(toi.str.is())); // SHOULD PASS
+
+export const db = { 
+    VARIABLE3: envoi.registerVariable('VARIABLE3', toi.required().and(toi.num.is())), // SHOULD FAIL
+}
+
+envoi.validateEnvVars();
+```
+
+This example will fail with:
+
+Error: VARIABLE1, value is not a number
+Error: VARIABLE3, value is not a number```
+
+and will exit the process.
+
+Contributing
+------------
+
+TODO
+
+LICENSE
+-------
+
+TODO
