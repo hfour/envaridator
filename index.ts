@@ -1,15 +1,24 @@
-import * as toi from '@toi/toi';
+type Validator<T> = (value: string) => T;
 
-interface err {
-  envName: string;
-  toiValErr: toi.ValidationError;
+type ValidationError = {
+  name: string,
+  message: string,
+  toString(): string,
+};
+
+class EnvValidationError {
+  constructor(private _envName: string, private toiValErr: ValidationError) {}
+
+  toString() {
+    return `${this._envName} environment variable is invalid: ${this.toiValErr}`;
+  }
 }
 
 export class Envoi {
-  private registeredEnvVars: { [name: string]: Envar } = {};
-  private failedEnvVars: err[] = [];
+  private registeredEnvVars: { [name: string]: Envar<unknown> } = {};
+  private failedEnvVars: EnvValidationError[] = [];
 
-  registerVariable(name: string, validator: toi.Validator<unknown, unknown>) {
+  registerVariable<T>(name: string, validator: Validator<T>) {
     // Check if the environment variable exists
     const value: string | undefined = process.env[name];
     // if not, throw an error
@@ -30,33 +39,22 @@ export class Envoi {
   validateEnvVars() {
     Object.keys(this.registeredEnvVars).forEach(name => {
       try {
-        this.registeredEnvVars[name].validate();
+        this.registeredEnvVars[name].value;
       } catch (error) {
-        this.failedEnvVars.push({ envName: name, toiValErr: error });
+        this.failedEnvVars.push(new EnvValidationError(name, error));
       }
     });
 
     if (this.failedEnvVars.length > 0) {
-      this.showErrors(this.failedEnvVars.length);
+      return this.failedEnvVars;
     }
-  }
-
-  showErrors(err: number) {
-    for (let i = 0; i < err; i++) {
-      console.log(
-        `${this.failedEnvVars[i].toiValErr.name}: ${this.failedEnvVars[i].envName}, ${
-          this.failedEnvVars[i].toiValErr.message
-        }`,
-      );
-    }
-    process.exit(1);
   }
 }
 
-class Envar {
-  constructor(private _name: string, private _value: string, private _validator: toi.Validator<unknown, unknown>) {}
+class Envar<T> {
+  constructor(private _name: string, private _value: string, private _validator: Validator<T>) {}
 
-  validate() {
+  private validate() {
     return this._validator(this._value);
   }
 
@@ -65,6 +63,6 @@ class Envar {
   }
 
   get value() {
-    return this._value;
+    return this.validate();
   }
 }
