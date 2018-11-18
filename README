@@ -17,10 +17,8 @@ export const db = {
     VARIABLE3: envoi.register('VARIABLE3', toi.required().and(toi.num.is())), // SHOULD FAIL
 }
 
-envoi.validate();
+console.log(envoi.validate());
 ```
-
-Should 
 
 Contributing
 ------------
