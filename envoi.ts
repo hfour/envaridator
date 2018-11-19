@@ -2,44 +2,15 @@
  * Envoi is a TypeScript environment variable validator.
  */
 
-type RegisteredVariable = { [name: string]: Envar<unknown> }
-
 type Validator<T> = (value: string) => T;
 
-type ValidationError = {
-  name: string,
-  message: string,
-  toString(): string,
+type RegisteredVariable = { 
+  [name: string]: Envar<unknown> 
+}
+
+type ValidationError = { 
+  message: string
 };
-
-/**
- * When an environment variable is being registered,
- * it's name, value, and validator are assigned to
- * a {@link Envar} object for later use.
- */
-class Envar<T> {
-  constructor(private _name: string, private _value: string, private _validator: Validator<T>) {}
-
-  private validate() {
-    return this._validator(this._value);
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get value() {
-    return this.validate();
-  }
-}
-
-export class EnvarError {
-  constructor(private _environmentVariableName: string, private validationError: ValidationError) {}
-
-  toString() {
-    return `Environment variable: ${this._environmentVariableName} failed validation with: ${this.validationError}\n`;
-  }
-}
 
 /**
  * Envoi handles the registration and validation 
@@ -59,12 +30,9 @@ export class Envoi {
    * @param validator the actual validator (e.g. toi.required().and(toi.str.is()))
    */
   register<T>(name: string, validator: Validator<T>) {
-    const value: string | undefined = process.env[name];
-
-    if (!value) throw new Error(`Variable ${name} is undefined!`);
     if (this.registeredVariables[name] != null) throw new Error(`Variable ${name} already defined!`);
 
-    const envar = new Envar(name, value, validator);
+    const envar = new Envar(name, validator);
     this.registeredVariables[name] = envar;
 
     return envar;
@@ -88,9 +56,52 @@ export class Envoi {
       }
     });
 
-    if (this.failedVariables.length > 0) 
-      return this.failedVariables;
-    else
-      return this.registeredVariables;
+    if (this.failedVariables.length > 0) {
+      this.failedVariables.forEach(envar => {
+        
+        console.error(JSON.stringify({
+          name: envar.errorVariableName,
+          message: envar.errorMessage,
+        }, null, 2));
+      });
+
+      throw new Error ("One or more evironment variables were not validated correctly").message;
+    };
+  }
+}
+
+/**
+ * When an environment variable is being registered,
+ * it's name, value, and validator are assigned to
+ * a {@link Envar} object for later use.
+ */
+export class Envar<T> {
+  constructor(private _name: string, private _validator: Validator<T>) {}
+
+  private validate() {
+    const value: string | undefined = process.env[this._name];
+    if (!value) throw new Error(`Environment variable: ${this._name} is undefined.`);
+
+    return this._validator(value);
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get value() {
+    return this.validate();
+  }
+}
+
+export class EnvarError {
+  constructor(private _environmentVariableName: string, private validationError: ValidationError) {}
+
+  get errorMessage() {
+    return this.validationError.message;
+  }
+
+  get errorVariableName() {
+    return this._environmentVariableName;
   }
 }
