@@ -4,7 +4,9 @@
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.js",
+    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100"
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,16 @@
   "homepage": "https://github.com/tinuninu/envoi#readme",
   "dependencies": {
     "@toi/toi": "^1.0.5",
-    "@types/node": "^10.12.7",
-    "typescript": "^3.1.6"
+    "@types/node": "^10.12.7"
+  },
+  "devDependencies": {
+    "@toi/toix": "^1.0.6",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "source-map-support": "^0.5.9"
   }
 }
