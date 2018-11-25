@@ -2,7 +2,7 @@
  * Envoi is a TypeScript environment variable validator.
  */
 
-type Validator<T> = (value: string) => T;
+type Validator<T> = (value: string | undefined) => T;
 
 type RegisteredVariable = { 
   [name: string]: Envar<unknown> 
@@ -18,7 +18,16 @@ type ValidationError = {
  */
 export class Envoi {
   private registeredVariables: RegisteredVariable = {};
-  private failedVariables: EnvarError[] = [];
+
+  private status(failedVariables: EnvarError[]) {
+    let status: string = `The following environment variables are invalid:\n\n`
+
+    failedVariables.forEach(envar => {
+      status += `${envar.errorVariableName} - ${envar.errorMessage}\n`
+    })
+
+    return status;
+  }
 
   /**
    * register is a function that tries to extract the 
@@ -48,24 +57,18 @@ export class Envoi {
    * it returns {@link failedVariables} instead.
    */
   validate() {
+    let failedVariables: EnvarError[] = []
+
     Object.keys(this.registeredVariables).forEach(name => {
       try {
         this.registeredVariables[name].value;
       } catch (validationError) {
-        this.failedVariables.push(new EnvarError(name, validationError));
+        failedVariables.push(new EnvarError(name, validationError));
       }
     });
 
-    if (this.failedVariables.length > 0) {
-      this.failedVariables.forEach(envar => {
-        
-        console.error(JSON.stringify({
-          name: envar.errorVariableName,
-          message: envar.errorMessage,
-        }, null, 2));
-      });
-
-      throw new Error ("One or more evironment variables were not validated correctly").message;
+    if (failedVariables.length > 0) {
+      throw new Error(this.status(failedVariables));
     };
   }
 }
@@ -78,11 +81,15 @@ export class Envoi {
 export class Envar<T> {
   constructor(private _name: string, private _validator: Validator<T>) {}
 
-  private validate() {
-    const value: string | undefined = process.env[this._name];
-    if (!value) throw new Error(`Environment variable: ${this._name} is undefined.`);
+  private cache: {empty: true} | {value: T} = { empty: true };
 
-    return this._validator(value);
+  private validate() {
+    if ("empty" in this.cache) {
+      const value: string | undefined = process.env[this._name];
+      this.cache = {value: this._validator(value)};
+    }
+  
+    return this.cache.value;
   }
 
   get name() {
