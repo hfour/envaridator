@@ -30,7 +30,15 @@
     "@types/node": "^10.12.7"
   },
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": -10
+      }
+    }
   },
   "devDependencies": {
     "@toi/toix": "^1.0.6",
