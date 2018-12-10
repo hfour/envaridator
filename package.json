@@ -5,8 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.js",
-    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100",
+    "test": "jest",
+    "coverage": "jest --coverage",
     "prepare":"tsc"
   },
   "repository": {
@@ -34,9 +34,9 @@
     "preset": "ts-jest",
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
         "statements": -10
       }
     }
