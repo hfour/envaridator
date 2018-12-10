@@ -1,52 +1,50 @@
 envoi
 =====
 
-Envoi is a tiny environment variable validation library.
+Envoi is a tiny environment variable validation library. It's main purpose is
+parsing, registering and validating environment variables.
 
-It's main purpose is to enable more clean approach in parsing, registering and validating environment variables.
+An example validation with envoi would look like this:
 
-Using it is pretty straightforward, for example:
+NOTE: 
+
+- This example uses https://github.com/hf/toi validators.
+- Validators are of type: Validator<T> = (value: string | undefined) => T;
 
 ```
 let envoi = new Envoi();
 
-export const VARIABLE1 = envoi.register('V@R1ABL3', toi.required().and(toi.str.is())); // SHOULD FAIL
-export const VARIABLE2 = envoi.register('VARIABLE2', toi.required().and(toi.str.is())); // SHOULD PASS
+process.env['CORRECT_URL'] = 'https://google.com';
+process.env['WRONG_URL'] = 'htttps://google.com';
+export const okURL = envoi.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD PASS
+export const wrongURL = envoi.register('WRONG_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD FAIL
 
-export const db = { 
-    VARIABLE3: envoi.register('VARIABLE3', toi.required().and(toi.str.is())), // SHOULD PASS
+
+process.env['SOME_VARIABLE'] = 'I exist!';
+export const undefinedVariable = envoi.register('V@R1ABL3', toi.required().and(toi.str.is())); // SHOULD FAIL
+export const existingVariable = envoi.register('SOME_VARIABLE', toi.required().and(toi.str.is())); // SHOULD PASS
+ 
+process.env['SOME_OTHER_VARIABLE'] = 'I exist as well!';
+export const objMyb = { 
+  VARIABLE3: envoi.register('SOME_OTHER_VARIABLE', toi.required().and(toi.str.is())), // SHOULD PASS
 }
 
-export const OKURL = envoi.register('OKURL', toi.required().and(toix.str.url({ protocol: "https:" }))); // SHOULD PASS
-export const FAILURL = envoi.register('FAILURL', toi.required().and(toix.str.url({ protocol: "https:" }))); // SHOULD FAIL
-
-envoi.validate();
-```
-
-Will fail and exit with:
-
-```
-{
-  "name": "V@R1ABL3",
-  "message": "Environment variable: V@R1ABL3 is undefined."
-}
-{
-  "name": "FAILURL",
-  "message": "Invalid protocol: https:"
+try {
+  envoi.validate();
+} catch (err) {
+  console.log(err.message);
 }
 
-One or more evironment variables were not validated correctly
 ```
 
-or If you don't want to validate more variables at once, 
+This would result in a 'status report' which would look like this:
 
 ```
-export const FAILURL = new Envar('FAILURL', toi.required().and(toix.str.url({ protocol: "https:" })));
+The following environment variables are invalid:
 
-console.log(FAILURL.value);
+WRONG_URL - Invalid protocol: https:
+V@R1ABL3 - value is null or undefined
 ```
-
-Will return the value if validated correctly, or throw an error if not.
 
 Contributing
 ------------
