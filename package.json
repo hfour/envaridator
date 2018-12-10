@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.js",
-    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100"
+    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100",
+    "prepare":"tsc"
   },
   "repository": {
     "type": "git",
