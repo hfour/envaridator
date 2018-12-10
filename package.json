@@ -5,8 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "nyc mocha --require source-map-support/register --recursive build/**/*.spec.js",
-    "coverage": "nyc check-coverage --lines 100 --statements 100 --branches 100 --functions 100"
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
@@ -24,19 +25,29 @@
   "bugs": {
     "url": "https://github.com/tinuninu/envoi/issues"
   },
-  "homepage": "https://github.com/tinuninu/envoi#readme",
+  "homepage": "https://github.com/tinuninu/envoi#README.md",
   "dependencies": {
     "@toi/toi": "^1.0.5",
     "@types/node": "^10.12.7"
   },
+  "jest": {
+    "preset": "ts-jest",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": -10
+      }
+    },
+    "testPathIgnorePatterns":["<rootDir>/build/", "<rootDir>/node_modules/"]
+  },
   "devDependencies": {
     "@toi/toix": "^1.0.6",
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.5",
-    "chai": "^4.2.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
-    "source-map-support": "^0.5.9"
+    "@types/jest": "^23.3.10",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2"
   }
 }
