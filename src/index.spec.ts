@@ -1,4 +1,4 @@
-import { Envoi, Envar } from './envoi';
+import { Envoi, Envar } from '.';
 import * as toi from '@toi/toi';
 import * as toix from '@toi/toix';
 

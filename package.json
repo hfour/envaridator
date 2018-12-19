@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "watch": "tsc -w",
     "test": "jest",
     "coverage": "jest --coverage",
     "prepare": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tinuninu/envoi.git"
+    "url": "git+https://github.com/hfour/envoi.git"
   },
   "keywords": [
     "envoi",
@@ -23,9 +25,9 @@
   "author": "Hristijan Lubeski",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinuninu/envoi/issues"
+    "url": "https://github.com/hfour/envoi/issues"
   },
-  "homepage": "https://github.com/tinuninu/envoi#README.md",
+  "homepage": "https://github.com/hfour/envoi#README.md",
   "dependencies": {
     "@toi/toi": "^1.0.5",
     "@types/node": "^10.12.7"
