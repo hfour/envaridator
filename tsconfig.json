@@ -1,10 +1,25 @@
 {
+  "include": ["src"],
+  "exclude": ["./node_modules"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "preserveWatchOutput": true,
     "strict": true,
-    "outDir": "build",
-    "sourceMap": true
-  },
-  "include": ["src"]
+    "baseUrl": "./",
+    "outDir": "./build",
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "allowJs": false,
+    "allowSyntheticDefaultImports": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noEmitOnError": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./typings", "./node_modules/@types"]
+  }
 }
