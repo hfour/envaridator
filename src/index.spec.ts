@@ -57,14 +57,6 @@ it('should cache the previous value', () => {
   expect(a).toEqual(b)
 })
 
-
-it('should validate an existing Envar', () => {
-  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
-
-  
-  console.log(envar.value);
-})
-
 it('should throw if the validation fails', () => {
   const envaridator = new Envaridator();
   envaridator.register(
