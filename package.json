@@ -3,13 +3,28 @@
   "version": "1.0.0",
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "types": "build/index.d.ts",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.7",
+    "@toi/toix": "^1.0.6",
+    "@types/jest": "^23.3.10",
+    "@toi/toi": "^1.0.5",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "coverage": "jest --coverage",
     "prepare": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/hfour/envaridator/issues"
   },
   "repository": {
     "type": "git",
@@ -22,16 +37,13 @@
     "environment",
     "validation"
   ],
+  "files": [
+    "build/index.js",
+    "build/index.d.ts"
+],
   "author": "Hristijan Lubeski",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hfour/envaridator/issues"
-  },
   "homepage": "https://github.com/hfour/envaridator#README.md",
-  "dependencies": {
-    "@toi/toi": "^1.0.5",
-    "@types/node": "^10.12.7"
-  },
   "jest": {
     "preset": "ts-jest",
     "coverageThreshold": {
@@ -43,13 +55,5 @@
       }
     },
     "testPathIgnorePatterns":["<rootDir>/build/", "<rootDir>/node_modules/"]
-  },
-  "devDependencies": {
-    "@toi/toix": "^1.0.6",
-    "@types/jest": "^23.3.10",
-    "jest": "^23.6.0",
-    "prettier": "^1.15.3",
-    "ts-jest": "^23.10.5",
-    "typescript": "^3.2.2"
   }
 }
