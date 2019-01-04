@@ -1,10 +1,10 @@
-envoi
+valenv
 =====
 
-Envoi is a tiny environment variable validation library. It's main purpose is
+Valenv is a tiny environment variable validation library. It's main purpose is
 parsing, registering and validating environment variables.
 
-An example validation with envoi would look like this:
+An example validation with valenv would look like this:
 
 NOTE: 
 
@@ -12,25 +12,25 @@ NOTE:
 - Validators are of type: Validator<T> = (value: string | undefined) => T;
 
 ```
-let envoi = new Envoi();
+let valenv = new Valenv();
 
 process.env['CORRECT_URL'] = 'https://google.com';
 process.env['WRONG_URL'] = 'htttps://google.com';
-export const okURL = envoi.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD PASS
-export const wrongURL = envoi.register('WRONG_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD FAIL
+export const okURL = valenv.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD PASS
+export const wrongURL = valenv.register('WRONG_URL', toi.required().and(toix.str.url({ protocol: "https:" }))) // SHOULD FAIL
 
 
 process.env['SOME_VARIABLE'] = 'I exist!';
-export const undefinedVariable = envoi.register('V@R1ABL3', toi.required().and(toi.str.is())); // SHOULD FAIL
-export const existingVariable = envoi.register('SOME_VARIABLE', toi.required().and(toi.str.is())); // SHOULD PASS
+export const undefinedVariable = valenv.register('V@R1ABL3', toi.required().and(toi.str.is())); // SHOULD FAIL
+export const existingVariable = valenv.register('SOME_VARIABLE', toi.required().and(toi.str.is())); // SHOULD PASS
  
 process.env['SOME_OTHER_VARIABLE'] = 'I exist as well!';
 export const objMyb = { 
-  VARIABLE3: envoi.register('SOME_OTHER_VARIABLE', toi.required().and(toi.str.is())), // SHOULD PASS
+  VARIABLE3: valenv.register('SOME_OTHER_VARIABLE', toi.required().and(toi.str.is())), // SHOULD PASS
 }
 
 try {
-  envoi.validate();
+  valenv.validate();
 } catch (err) {
   console.log(err.message);
 }

@@ -1,5 +1,5 @@
 {
-  "name": "envoi",
+  "name": "valenv",
   "version": "1.0.0",
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hfour/envoi.git"
+    "url": "git+https://github.com/hfour/valenv.git"
   },
   "keywords": [
-    "envoi",
+    "valenv",
     "validator",
     "toi",
     "environment",
@@ -25,9 +25,9 @@
   "author": "Hristijan Lubeski",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hfour/envoi/issues"
+    "url": "https://github.com/hfour/valenv/issues"
   },
-  "homepage": "https://github.com/hfour/envoi#README.md",
+  "homepage": "https://github.com/hfour/valenv#README.md",
   "dependencies": {
     "@toi/toi": "^1.0.5",
     "@types/node": "^10.12.7"

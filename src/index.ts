@@ -1,5 +1,5 @@
 /**
- * Envoi is a TypeScript environment variable validator.
+ * Valenv is a TypeScript environment variable validator.
  */
 
 type Validator<T> = (value: string | undefined) => T;
@@ -13,10 +13,10 @@ type ValidationError = {
 };
 
 /**
- * Envoi handles the registration and validation
+ * Valenv handles the registration and validation
  * of the environment variables.
  */
-export class Envoi {
+export class Valenv {
   private registeredVariables: RegisteredVariable = {};
 
   private status(failedVariables: EnvarError[]) {
