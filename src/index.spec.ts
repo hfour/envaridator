@@ -33,6 +33,31 @@ it('should successfully register an Envar', () => {
   expect(envar.name).toEqual("CORRECT_URL");
 })
 
+it('should successfully get the value of the Envar', () => {
+  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+
+  expect(envar.value.protocol).toEqual("https:");
+})
+
+it('should not throw if all of the variables are successfully validated', () => {
+  const envaridator = new Envaridator();
+  
+  envaridator.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: 'https:' })), 'A correct url for this app');
+
+  // plain return is enough because the test if it not throws if everything is alright.
+  expect(() => envaridator.validate()).not.toThrow();
+});
+
+it('should cache the previous value', () => {
+  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+
+  let a = envar.value;
+  let b = envar.value;
+  
+  expect(a).toEqual(b)
+})
+
+
 it('should validate an existing Envar', () => {
   const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
 
