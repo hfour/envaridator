@@ -1,5 +1,5 @@
 /**
- * Valenv is a TypeScript environment variable validator.
+ * Envaridator is a TypeScript environment variable validator.
  */
 
 type Validator<T> = (value: string | undefined) => T;
@@ -13,10 +13,10 @@ type ValidationError = {
 };
 
 /**
- * Valenv handles the registration and validation
+ * Envaridator handles the registration and validation
  * of the environment variables.
  */
-export class Valenv {
+export class Envaridator {
   private registeredVariables: RegisteredVariable = {};
 
   private status(failedVariables: EnvarError[]) {

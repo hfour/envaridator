@@ -1,5 +1,5 @@
 {
-  "name": "valenv",
+  "name": "envaridator",
   "version": "1.0.0",
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hfour/valenv.git"
+    "url": "git+https://github.com/hfour/envaridator.git"
   },
   "keywords": [
-    "valenv",
+    "envaridator",
     "validator",
     "toi",
     "environment",
@@ -25,9 +25,9 @@
   "author": "Hristijan Lubeski",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hfour/valenv/issues"
+    "url": "https://github.com/hfour/envaridator/issues"
   },
-  "homepage": "https://github.com/hfour/valenv#README.md",
+  "homepage": "https://github.com/hfour/envaridator#README.md",
   "dependencies": {
     "@toi/toi": "^1.0.5",
     "@types/node": "^10.12.7"
