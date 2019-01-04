@@ -21,6 +21,25 @@ it('should throw an error if the variable is already defined', () => {
   );
 });
 
+it('should successfully register an Envar', () => {
+  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+
+  expect(envar.name).toEqual("CORRECT_URL");
+})
+
+it('should successfully register an Envar', () => {
+  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+
+  expect(envar.name).toEqual("CORRECT_URL");
+})
+
+it('should validate an existing Envar', () => {
+  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+
+  
+  console.log(envar.value);
+})
+
 it('should throw if the validation fails', () => {
   const envaridator = new Envaridator();
   envaridator.register(
