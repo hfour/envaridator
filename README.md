@@ -6,9 +6,13 @@ Envaridator is a really small environment variable validation library.
 
 Installing the package can be achieved by:
 
+With yarn:
 ```
 yarn add envaridator
+```
 
+With npm:
+```
 npm i --save envaridator
 ```
 
@@ -94,7 +98,7 @@ For example:
 ```export const okURL = envaridator.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: "https:" })), "description for CORRECT_URL")```
 
 - `okURL.description => "description for CORRECT_URL"`
-- `okURL.value => an URL object`
+- `okURL.value => an URL object` - also, please note that `value` validates the environment variable before it returns the actual value.
 - `okURL.name => "CORRECT_URL"`
 
 ## License
