@@ -67,7 +67,7 @@ WRONG_URL - Invalid protocol: https:
 
 ### Envaridator
 
-The get you up and running, you need an instance of `Envaridator`.
+To get you up and running, you need an instance of `Envaridator`.
 
 `let envaridator = new Envaridator();`
 
