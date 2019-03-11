@@ -1,3 +1,5 @@
+![Envaridator Logo](/assets/envaridator-logo.png)
+
 # Envaridator
 
 Envaridator is a really small environment variable validation library.
