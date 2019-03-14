@@ -20,7 +20,7 @@ npm i --save envaridator
 
 ## Basic usage:
 
-```
+```typescript
 import { Envaridator } from "envaridator";
 
 let envaridator = new Envaridator();
