@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/hfour/envaridator.svg?branch=master)](https://travis-ci.com/hfour/envaridator)
+
 # Envaridator
 
 Envaridator is a really small environment variable validation library.
