@@ -3,23 +3,24 @@
 
 # Envaridator
 
-Envaridator is a really small environment variable validation library.
+`Envaridator` is a small environment variable validation library. Install and basic usage can be found bellow. For documentation, please visit the [wiki](https://github.com/hfour/envaridator/wiki).
 
-## Install
+### Install
+Installing the packages can be done either with:
 
-Installing the package can be achieved by:
-
-With yarn:
+yarn:
 ```
 yarn add envaridator
 ```
 
-With npm:
+or with npm:
 ```
 npm i --save envaridator
 ```
 
-## Basic usage:
+### Basic usage:
+
+NOTE: This example uses [toi](https://github.com/hf/toi)'s validators. You can always write your own validators or use existing ones.
 
 ```typescript
 import { Envaridator } from "envaridator";
@@ -65,45 +66,3 @@ The following environment variables are invalid:
 
 WRONG_URL - Invalid protocol: https:
 ```
-
-## Documentation
-
-### Envaridator
-
-To get you up and running, you need an instance of `Envaridator`.
-
-`let envaridator = new Envaridator();`
-
-`Envaridator` offers few methods:
-
-- `envaridator.register(<VARIABLE_NAME>, <VALIDATOR>, <DESCRIPTION>)`
-
-The `VARIABLE_NAME` should be the actual environment variable name, the `VALIDATOR` should be a validator
-of type `Validator<T> = (value: string | undefined) => T;` and the `DESCRIPTION` is the
-description of the environment variable (usually what it is or what it does).
-
-- `envaridator.describeAll()`
-
-Returns the name and the description of the registered (in envaridator) environment variables.
-
-- `envaridator.validate()` - validates the registered variables, if one or more variables
-fail the validation - throws an error with a status report which includes the name of environment variable that failed the validation and also the reason.
-
-### Envar
-
-A successfully registered variable will return an `Envar`.
-
-The Envar object contains the description of the registered environment variable, it's value
-and it's name.
-
-For example:
-
-```export const okURL = envaridator.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: "https:" })), "description for CORRECT_URL")```
-
-- `okURL.description => "description for CORRECT_URL"`
-- `okURL.value => an URL object` - also, please note that `value` validates the environment variable before it returns the actual value.
-- `okURL.name => "CORRECT_URL"`
-
-## License
-
-Licensed under the MIT license. You can get a copy of it in `LICENSE.md`.
