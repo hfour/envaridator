@@ -1,3 +1,4 @@
+![Envaridator Logo](/assets/envaridator-logo.png)
 [![Build Status](https://travis-ci.com/hfour/envaridator.svg?branch=master)](https://travis-ci.com/hfour/envaridator)
 
 # Envaridator
@@ -20,7 +21,7 @@ npm i --save envaridator
 
 ## Basic usage:
 
-```
+```typescript
 import { Envaridator } from "envaridator";
 
 let envaridator = new Envaridator();
