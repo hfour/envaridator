@@ -1,4 +1,5 @@
 ![Envaridator Logo](/assets/envaridator-logo.png)
+[![Build Status](https://travis-ci.com/hfour/envaridator.svg?branch=master)](https://travis-ci.com/hfour/envaridator)
 
 # Envaridator
 
@@ -69,7 +70,7 @@ WRONG_URL - Invalid protocol: https:
 
 ### Envaridator
 
-The get you up and running, you need an instance of `Envaridator`.
+To get you up and running, you need an instance of `Envaridator`.
 
 `let envaridator = new Envaridator();`
 
