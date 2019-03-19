@@ -30,6 +30,14 @@ import { Envaridator } from "envaridator";
 #### Example
 Note: This example uses [toi](https://github.com/hf/toi)'s validators. You can always write your own validators or use existing ones. Check the [wiki]() to learn more about the validators
 
+Importing:
+```typescript
+import { Envaridator } from "envaridator";
+```
+
+#### Example
+Note: This example uses [toi](https://github.com/hf/toi)'s validators. You can always write your own validators or use existing ones. Check the [wiki]() to learn more about the validators
+
 ```typescript
 let envaridator = new Envaridator();
 
