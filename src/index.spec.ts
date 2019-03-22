@@ -66,7 +66,7 @@ it('should throw if the validation fails', () => {
   );
 
   expect(() => envaridator.validate()).toThrow(
-    'The following environment variables are invalid:\n\nWRONG_URL - Invalid protocol: https:\n'
+    'The following environment variables are invalid:\n\nWRONG_URL - Invalid protocol: https:'
   );
 });
 
