@@ -4,7 +4,6 @@ DIR=$(dirname $(readlink -f $0))
 
 echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > $HOME/.npmrc
 
-# bash $DIR/package-version.sh @toi/toi packages/toi
 bash $DIR/package-version.sh envaridator .
 ENVARIDATOR_VERSION=$?
 
