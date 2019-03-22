@@ -20,13 +20,11 @@ export class Envaridator {
   private registeredVariables: RegisteredVariable = {};
 
   private status(failedVariables: EnvarError[]) {
-    let status: string = `The following environment variables are invalid:\n\n`;
+    let status = failedVariables.map(envar => `${envar.errorVariableName} - ${envar.errorMessage}`);
+    status.unshift('The following environment variables are invalid:\n');
 
-    failedVariables.forEach(envar => {
-      status += `${envar.errorVariableName} - ${envar.errorMessage}\n`;
-    });
-
-    return status;
+    const data = status.join('\n');
+    return data;
   }
 
   /**
