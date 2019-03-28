@@ -8,10 +8,6 @@ type RegisteredVariable = {
   [name: string]: Envar<unknown>;
 };
 
-type ValidationError = {
-  message: string;
-};
-
 /**
  * Envaridator handles the registration and validation
  * of the environment variables.
@@ -19,11 +15,9 @@ type ValidationError = {
 export class Envaridator {
   private registeredVariables: RegisteredVariable = {};
 
-  private status(failedVariables: EnvarError[]) {
-    let status = failedVariables.map(envar => `${envar.errorVariableName} - ${envar.errorMessage}`);
-    status.unshift('The following environment variables are invalid:\n');
-
-    const data = status.join('\n');
+  private status(failedVariables: string[]) {
+    failedVariables.unshift('The following environment variables are invalid:\n');
+    const data = failedVariables.join('\n');
     return data;
   }
 
@@ -57,13 +51,13 @@ export class Envaridator {
    * it returns {@link failedVariables} instead.
    */
   validate() {
-    let failedVariables: EnvarError[] = [];
+    let failedVariables: string[] = [];
 
     Object.keys(this.registeredVariables).forEach(name => {
       try {
         this.registeredVariables[name].value;
       } catch (validationError) {
-        failedVariables.push(new EnvarError(name, validationError));
+        failedVariables.push(validationError.message);
       }
     });
 
@@ -110,22 +104,14 @@ export class Envar<T> {
   }
 
   get value() {
-    return this.validate();
+    try {
+      return this.validate();
+    } catch (error) {
+      throw new Error(`${this._name} - ${error.message}`);
+    }
   }
 
   get description() {
     return this._description;
-  }
-}
-
-export class EnvarError {
-  constructor(private _environmentVariableName: string, private validationError: ValidationError) {}
-
-  get errorMessage() {
-    return this.validationError.message;
-  }
-
-  get errorVariableName() {
-    return this._environmentVariableName;
   }
 }
