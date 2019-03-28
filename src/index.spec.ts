@@ -39,6 +39,12 @@ it('should successfully get the value of the Envar', () => {
   expect(envar.value.protocol).toEqual("https:");
 })
 
+it('should throw validation error if Envar value is invalid', () => {
+  const envar = new Envar("WRONG_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "A wrong url for this app");
+
+  expect(() => envar.value).toThrow("WRONG_URL - Invalid protocol: https:");
+})
+
 it('should not throw if all of the variables are successfully validated', () => {
   const envaridator = new Envaridator();
   
