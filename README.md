@@ -7,7 +7,12 @@
 # envaridator
 [Docs](https://github.com/hfour/envaridator/wiki/Docs) | [Contributing](https://github.com/hfour/envaridator/wiki/Contributing) | [Wiki](https://github.com/hfour/envaridator/wiki)
 
-`Envaridator` is a small environment variable validation library. You can find the installation guide and basic usage bellow.
+`Envaridator` is a small environment variable management and validation library. It provides
+
+* type safe access to your environment based configuration
+* validation of all variables before your app starts
+* the ability to show a list of the environment vars (e.g. something you might want to do if a `--help` flag is passed)
+
 
 ### Installation
 Using `yarn`:
@@ -22,55 +27,38 @@ npm i --save envaridator
 
 ### Basic usage:
 
-Importing:
-```typescript
-import { Envaridator } from "envaridator";
-```
-
-#### Example
-Note: This example uses [toi](https://github.com/hf/toi)'s validators. You can always write your own validators or use existing ones. Check the [wiki]() to learn more about the validators
+Note: the below example uses toi to validate the variable, but you can use any function that converts the variable to the desired type, or throws an error if the conversion fails.
 
 Importing:
 ```typescript
 import { Envaridator } from "envaridator";
-```
 
-#### Example
-Note: This example uses [toi](https://github.com/hf/toi)'s validators. You can always write your own validators or use existing ones. Check the [wiki](https://github.com/hfour/envaridator/wiki) to learn more about the validators
-
-```typescript
 let envaridator = new Envaridator();
 
 import * as toi from "@toi/toi";
 import * as toix from "@toi/toix";
 
-process.env["CORRECT_URL"] = "https://google.com";
-const okURL = envaridator.register(
-  "CORRECT_URL",
-  toi.required().and(
-    toix.str.url({
-      protocol: "https:"
-    })
-  ),
-  "description for the CORRECT_URL environment variable."
+const dbURL = envaridator.register(
+  "DATABASE_URL",
+  toi.required().and(toix.str.url({protocol: 'postgres'})),
+  "The SQL database url. Must be a PostgreSQL database."
 );
 
-process.env["WRONG_URL"] = "htttps://google.com"; // invalid URL protocol
-const badURL = envaridator.register(
-  "WRONG_URL",
-  toi.required().and(
-    toix.str.url({
-      protocol: "https:"
-    })
-  ),
-  "description for the WRONG_URL environment variable."
-);
+if (process.env['HELP']) {
+  console.log(envaridator.describeAll());
+  process.exit(0);
+}
 
 try {
   envaridator.validate();
 } catch (err) {
-  console.log(err.message);
+  console.error(err.message);
+  process.exit(1);
 }
+
+// After this point, we can use the variables
+
+let db = createDatabase({url: dbURL.value})
 ```
 
 If one or more registered environment variables fail the validation, `envaridator` will return a status report:
@@ -78,8 +66,16 @@ If one or more registered environment variables fail the validation, `envaridato
 ```
 The following environment variables are invalid:
 
-WRONG_URL - Invalid protocol: https:
+DATABASE_URL - Invalid protocol: mysql
 ```
+
+### Misc
+
+Why separate registration from use?
+
+* validate all variables at once, reporting all invalid values instead of just the first one
+* different parts of the app can import envaridator instance and register own variables during app "config" phase
+* easy to show help listing all variables via `envaridator.describeAll`
 
 ### License
 
