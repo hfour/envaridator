@@ -74,6 +74,15 @@ export class Envaridator {
       .map(name => `${name} - ${this.registeredVariables[name].description}`)
       .join('\n');
   }
+
+  /**
+   * Describe all registered environment variables with some markdown flavor
+   */
+  describeAllMarkdown() {
+    return Object.keys(this.registeredVariables)
+      .map(name => `**${name}** - ${this.registeredVariables[name].description}  `)
+      .join('\n');
+  }
 }
 
 /**

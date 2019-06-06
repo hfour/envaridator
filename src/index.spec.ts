@@ -127,3 +127,27 @@ VAR_2 - The second variable. Must be configured correctly.
 VAR_3 - The third variable. Must be configured correctly."
 `);
 });
+
+it('should describe all registered variables with some markdown formatting', () => {
+  const envaridator = new Envaridator();
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_2',
+    toi.required(),
+    'The second variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_3',
+    toi.required(),
+    'The third variable. Must be configured correctly.'
+  );
+  expect(envaridator.describeAllMarkdown()).toMatchInlineSnapshot(`
+"**VAR_1** - The first variable. Must be configured correctly.  
+**VAR_2** - The second variable. Must be configured correctly.  
+**VAR_3** - The third variable. Must be configured correctly.  "
+`);
+});
