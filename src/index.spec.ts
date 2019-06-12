@@ -7,7 +7,11 @@ process.env['WRONG_URL'] = 'htttps://google.com';
 
 it('should successfully register an environment variable', () => {
   const envaridator = new Envaridator();
-  const correctURL = envaridator.register('CORRECT_URL', toi.required(), 'A correct url for this app');
+  const correctURL = envaridator.register(
+    'CORRECT_URL',
+    toi.required(),
+    'A correct url for this app'
+  );
 
   expect(correctURL instanceof Envar).toEqual(true);
 });
@@ -16,52 +20,76 @@ it('should throw an error if the variable is already defined', () => {
   const envaridator = new Envaridator();
   envaridator.register('CORRECT_URL', toi.required(), 'A correct url for this app');
 
-  expect(() => envaridator.register('CORRECT_URL', toi.required(), 'A correct url for this app')).toThrow(
-    'Variable CORRECT_URL already defined!'
-  );
+  expect(() =>
+    envaridator.register('CORRECT_URL', toi.required(), 'A correct url for this app')
+  ).toThrow('Variable CORRECT_URL already defined!');
 });
 
 it('should successfully register an Envar', () => {
-  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+  const envar = new Envar(
+    'CORRECT_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'some description'
+  );
 
-  expect(envar.name).toEqual("CORRECT_URL");
-})
+  expect(envar.name).toEqual('CORRECT_URL');
+});
 
 it('should successfully register an Envar', () => {
-  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+  const envar = new Envar(
+    'CORRECT_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'some description'
+  );
 
-  expect(envar.name).toEqual("CORRECT_URL");
-})
+  expect(envar.name).toEqual('CORRECT_URL');
+});
 
 it('should successfully get the value of the Envar', () => {
-  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+  const envar = new Envar(
+    'CORRECT_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'some description'
+  );
 
-  expect(envar.value.protocol).toEqual("https:");
-})
+  expect(envar.value.protocol).toEqual('https:');
+});
 
 it('should throw validation error if Envar value is invalid', () => {
-  const envar = new Envar("WRONG_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "A wrong url for this app");
+  const envar = new Envar(
+    'WRONG_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'A wrong url for this app'
+  );
 
-  expect(() => envar.value).toThrow("WRONG_URL - Invalid protocol: https:");
-})
+  expect(() => envar.value).toThrow('WRONG_URL - Invalid protocol: https:');
+});
 
 it('should not throw if all of the variables are successfully validated', () => {
   const envaridator = new Envaridator();
-  
-  envaridator.register('CORRECT_URL', toi.required().and(toix.str.url({ protocol: 'https:' })), 'A correct url for this app');
+
+  envaridator.register(
+    'CORRECT_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'A correct url for this app'
+  );
 
   // plain return is enough because the test if it not throws if everything is alright.
   expect(() => envaridator.validate()).not.toThrow();
 });
 
 it('should cache the previous value', () => {
-  const envar = new Envar("CORRECT_URL", toi.required().and(toix.str.url({ protocol: 'https:' })), "some description");
+  const envar = new Envar(
+    'CORRECT_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'some description'
+  );
 
   let a = envar.value;
   let b = envar.value;
-  
-  expect(a).toEqual(b)
-})
+
+  expect(a).toEqual(b);
+});
 
 it('should throw if the validation fails', () => {
   const envaridator = new Envaridator();
@@ -78,12 +106,48 @@ it('should throw if the validation fails', () => {
 
 it('should describe all registered variables', () => {
   const envaridator = new Envaridator();
-  envaridator.register('VAR_1', toi.required(), 'The first variable. Must be configured correctly.');
-  envaridator.register('VAR_2', toi.required(), 'The second variable. Must be configured correctly.');
-  envaridator.register('VAR_3', toi.required(), 'The third variable. Must be configured correctly.');
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_2',
+    toi.required(),
+    'The second variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_3',
+    toi.required(),
+    'The third variable. Must be configured correctly.'
+  );
   expect(envaridator.describeAll()).toMatchInlineSnapshot(`
 "VAR_1 - The first variable. Must be configured correctly.
 VAR_2 - The second variable. Must be configured correctly.
 VAR_3 - The third variable. Must be configured correctly."
+`);
+});
+
+it('should describe all registered variables with some markdown formatting', () => {
+  const envaridator = new Envaridator();
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_2',
+    toi.required(),
+    'The second variable. Must be configured correctly.'
+  );
+  envaridator.register(
+    'VAR_3',
+    toi.required(),
+    'The third variable. Must be configured correctly.'
+  );
+  expect(envaridator.describeAllMarkdown()).toMatchInlineSnapshot(`
+"**VAR_1** - The first variable. Must be configured correctly.  
+**VAR_2** - The second variable. Must be configured correctly.  
+**VAR_3** - The third variable. Must be configured correctly.  "
 `);
 });
