@@ -32,8 +32,7 @@ export class Envaridator {
    * @param description string describing the variable
    */
   register<T>(name: string, validator: Validator<T>, description: string) {
-    if (this.registeredVariables[name] != null)
-      throw new Error(`Variable ${name} already defined!`);
+    if (this.registeredVariables[name] != null) throw new Error(`Variable ${name} already defined!`);
 
     const envar = new Envar(name, validator, description);
     this.registeredVariables[name] = envar;
@@ -91,11 +90,7 @@ export class Envaridator {
  * a {@link Envar} object for later use.
  */
 export class Envar<T> {
-  constructor(
-    private _name: string,
-    private _validator: Validator<T>,
-    private _description: string
-  ) {}
+  constructor(private _name: string, private _validator: Validator<T>, private _description: string) {}
 
   private cache: { empty: true } | { value: T } = { empty: true };
 
