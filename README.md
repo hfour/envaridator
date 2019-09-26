@@ -45,10 +45,27 @@ let envaridator = new Envaridator();
 import * as toi from '@toi/toi';
 import * as toix from '@toi/toix';
 
-const dbURL = envaridator.register(
+const oldDBURL = envaridator.register(
+  'DB_URL',
+  toi.optional().and(toix.str.url({ protocol: 'postgres' })),
+  'The SQL database url. Must be a PostgreSQL database. Deprecated, use DATABASE_URL',
+);
+
+const newDBURL = envaridator.register(
   'DATABASE_URL',
-  toi.required().and(toix.str.url({ protocol: 'postgres' })),
+  toi.optional().and(toix.str.url({ protocol: 'postgres' })),
   'The SQL database url. Must be a PostgreSQL database.',
+);
+
+envaridator.registerPostValidation(
+  'DATABASE_URL_MIGRATION',
+  () => {
+    // if neither DB_URL or DATABASE_URL is defined, throw an error
+    if (!(oldDBURL.value || newDBURL.value)) {
+      throw new Error();
+    }
+  },
+  'Either DB_URL or DATABASE_URL needs to defined.',
 );
 
 if (process.env['HELP']) {
@@ -64,8 +81,8 @@ try {
 }
 
 // After this point, we can use the variables
-
-let db = createDatabase({ url: dbURL.value });
+const dbURL = newDBURL.value || oldDBURL.value;
+let db = createDatabase({ url: dbURL });
 ```
 
 If one or more registered environment variables fail the validation, `envaridator` will return a status report:
@@ -76,11 +93,15 @@ The following environment variables are invalid:
 DATABASE_URL - Invalid protocol: mysql
 ```
 
+You can also add post validation rules (by using `envaridator.registerPostValidation`) which you can use to add
+constraints across all variables. For example, you can use this feature to check migration of an environment variable.
+
 ### Misc
 
 Why separate registration from use?
 
 - validate all variables at once, reporting all invalid values instead of just the first one
+- validate all variables as a whole
 - different parts of the app can import envaridator instance and register own variables during app "config" phase
 - easy to show help listing all variables via `envaridator.describeAll`
 

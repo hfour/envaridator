@@ -3,6 +3,7 @@
  */
 
 type Validator<T> = (value: string | undefined) => T;
+type PostValidator = () => void;
 
 type RegisteredVariable = {
   [name: string]: Envar<unknown>;
@@ -14,6 +15,7 @@ type RegisteredVariable = {
  */
 export class Envaridator {
   private registeredVariables: RegisteredVariable = {};
+  private postValidations: Record<string, Rule> = {};
 
   private status(failedVariables: string[]) {
     failedVariables.unshift('The following environment variables are invalid:\n');
@@ -41,6 +43,21 @@ export class Envaridator {
   }
 
   /**
+   * registerPostValidation adds a validation rule which is run after all variable validations.
+   * It should be used to validate rules on the whole config i.e. for migrating of an environment variable.
+   *
+   * @param name the name of the environment variable
+   * @param validator function which should throw if the config is not validated
+   * @param description string describing the variable
+   */
+  registerPostValidation(name: string, validator: PostValidator, description: string) {
+    if (this.postValidations[name] != null) throw new Error(`Post validation rule ${name} already defined!`);
+
+    const rule = new Rule(name, validator, description);
+    this.postValidations[name] = rule;
+  }
+
+  /**
    * Iterates over {@link registeredVariables} and
    * calls the validator function on every {@link Envar}.
    * If the variables are successfully validated, it returns
@@ -60,6 +77,17 @@ export class Envaridator {
       }
     });
 
+    const rulesKeys = Object.keys(this.postValidations);
+    if (rulesKeys.length > 0) {
+      rulesKeys.forEach(name => {
+        try {
+          this.postValidations[name].validate();
+        } catch (validationError) {
+          failedVariables.push(validationError.message);
+        }
+      });
+    }
+
     if (failedVariables.length > 0) {
       throw new Error(this.status(failedVariables));
     }
@@ -69,18 +97,36 @@ export class Envaridator {
    * Describe all registered environment variables
    */
   describeAll() {
-    return Object.keys(this.registeredVariables)
-      .map(name => `${name} - ${this.registeredVariables[name].description}`)
-      .join('\n');
+    const envars = Object.keys(this.registeredVariables).map(
+      name => `${name} - ${this.registeredVariables[name].description}`,
+    );
+
+    const rules = Object.keys(this.postValidations).map(name => `${name} - ${this.postValidations[name].description}`);
+
+    return [...envars, ...rules].join('\n');
   }
 
   /**
    * Describe all registered environment variables with some markdown flavor
    */
   describeAllMarkdown() {
-    return Object.keys(this.registeredVariables)
-      .map(name => `**${name}** - ${this.registeredVariables[name].description}  `)
+    const envars = Object.keys(this.registeredVariables)
+      .map(name => `**${name}** - ${this.registeredVariables[name].description}`)
       .join('\n');
+
+    const rules = Object.keys(this.postValidations)
+      .map(name => `**${name}** - ${this.postValidations[name].description}`)
+      .join('\n');
+
+    let result: string[] = [];
+    if (envars.length > 0) {
+      result.push('#Variables', envars);
+    }
+    if (rules.length > 0) {
+      result.push('#Post validation rules', rules);
+    }
+
+    return result.join('\n');
   }
 }
 
@@ -90,32 +136,41 @@ export class Envaridator {
  * a {@link Envar} object for later use.
  */
 export class Envar<T> {
-  constructor(private _name: string, private _validator: Validator<T>, private _description: string) {}
+  constructor(readonly name: string, private readonly validator: Validator<T>, readonly description: string) {}
 
   private cache: { empty: true } | { value: T } = { empty: true };
 
   private validate() {
     if ('empty' in this.cache) {
-      const value: string | undefined = process.env[this._name];
-      this.cache = { value: this._validator(value) };
+      const value: string | undefined = process.env[this.name];
+      this.cache = { value: this.validator(value) };
     }
 
     return this.cache.value;
-  }
-
-  get name() {
-    return this._name;
   }
 
   get value() {
     try {
       return this.validate();
     } catch (error) {
-      throw new Error(`${this._name} - ${error.message}`);
+      throw new Error(`${this.name} - ${error.message}`);
     }
   }
+}
 
-  get description() {
-    return this._description;
+/**
+ * When an environment variable is being registered,
+ * it's name, value, and validator are assigned to
+ * a {@link Envar} object for later use.
+ */
+export class Rule {
+  constructor(readonly name: string, readonly validator: PostValidator, readonly description: string) {}
+
+  validate() {
+    try {
+      return this.validator();
+    } catch (error) {
+      throw new Error(`${this.name} - ${error.message}`);
+    }
   }
 }
