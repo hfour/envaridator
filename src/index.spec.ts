@@ -95,6 +95,15 @@ it('should throw if a post validation rule fails', () => {
   );
 });
 
+it('should throw if a post validation rule already exists', () => {
+  const envaridator = new Envaridator();
+  envaridator.registerPostValidation('DEFINED_RULE', () => {}, '');
+
+  expect(() => envaridator.registerPostValidation('DEFINED_RULE', () => {}, '')).toThrow(
+    'Post validation rule DEFINED_RULE already defined!',
+  );
+});
+
 it('should describe all registered variables and rules', () => {
   const envaridator = new Envaridator();
   envaridator.register('VAR_1', toi.required(), 'The first variable. Must be configured correctly.');
