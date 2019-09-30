@@ -57,16 +57,12 @@ const newDBURL = envaridator.register(
   'The SQL database url. Must be a PostgreSQL database.',
 );
 
-envaridator.registerPostValidation(
-  'DATABASE_URL_MIGRATION',
-  () => {
-    // if neither DB_URL or DATABASE_URL is defined, throw an error
-    if (!(oldDBURL.value || newDBURL.value)) {
-      throw new Error();
-    }
-  },
-  'Either DB_URL or DATABASE_URL needs to defined.',
-);
+envaridator.registerPostValidation('Either DB_URL or DATABASE_URL needs to defined.', () => {
+  // if neither DB_URL or DATABASE_URL is defined, throw an error
+  if (!(oldDBURL.value || newDBURL.value)) {
+    throw new Error();
+  }
+});
 
 if (process.env['HELP']) {
   console.log(envaridator.describeAll());
