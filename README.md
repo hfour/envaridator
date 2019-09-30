@@ -14,7 +14,8 @@
 
 - type safe access to your environment based configuration
 - validation of all variables before your app starts
-- the ability to show a list of the environment vars (e.g. something you might want to do if a `--help` flag is passed)
+- the ability to show a list of the environment vars (e.g. something you might want to do if a
+  `--help` flag is passed)
 
 ### Installation
 
@@ -32,8 +33,8 @@ npm i --save envaridator
 
 ### Basic usage:
 
-Note: the below example uses toi to validate the variable, but you can use any function that converts the variable to
-the desired type, or throws an error if the conversion fails.
+Note: the below example uses toi to validate the variable, but you can use any function that
+converts the variable to the desired type, or throws an error if the conversion fails.
 
 Importing:
 
@@ -81,7 +82,8 @@ const dbURL = newDBURL.value || oldDBURL.value;
 let db = createDatabase({ url: dbURL });
 ```
 
-If one or more registered environment variables fail the validation, `envaridator` will return a status report:
+If one or more registered environment variables fail the validation, `envaridator` will return a
+status report:
 
 ```
 The following environment variables are invalid:
@@ -89,8 +91,9 @@ The following environment variables are invalid:
 DATABASE_URL - Invalid protocol: mysql
 ```
 
-You can also add post validation rules (by using `envaridator.registerPostValidation`) which you can use to add
-constraints across all variables. For example, you can use this feature to check migration of an environment variable.
+You can also add post validation rules (by using `envaridator.registerPostValidation`) which you can
+use to add constraints across all variables. For example, you can use this feature to check
+migration of an environment variable.
 
 ### Misc
 
@@ -98,7 +101,8 @@ Why separate registration from use?
 
 - validate all variables at once, reporting all invalid values instead of just the first one
 - validate all variables as a whole
-- different parts of the app can import envaridator instance and register own variables during app "config" phase
+- different parts of the app can import envaridator instance and register own variables during app
+  "config" phase
 - easy to show help listing all variables via `envaridator.describeAll`
 
 ### License
