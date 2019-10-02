@@ -110,6 +110,26 @@ it('should throw if a post validation rule fails', () => {
   );
 });
 
+it('should throw if a post validation rule fails', () => {
+  const envaridator = new Envaridator();
+
+  envaridator.register(
+    'WRONG_URL',
+    toi.required().and(toix.str.url({ protocol: 'https:' })),
+    'A wrong url for this app',
+  );
+  envaridator.registerPostValidation(
+    'This rule will throw when the envaridator validate is run',
+    () => {
+      throw new Error('This rule should throw');
+    },
+  );
+
+  expect(() => envaridator.validate()).toThrow(
+    'The following environment variables are invalid:\n\nWRONG_URL - Invalid protocol: https:\n\nThe following validation rules are invalid:\n\nThis rule should throw',
+  );
+});
+
 it('should describe all registered variables and rules', () => {
   const envaridator = new Envaridator();
   envaridator.register(
