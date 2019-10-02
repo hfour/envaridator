@@ -3,6 +3,7 @@
  */
 
 type Validator<T> = (value: string | undefined) => T;
+type PostValidator = () => void;
 
 type RegisteredVariable = {
   [name: string]: Envar<unknown>;
@@ -14,10 +15,17 @@ type RegisteredVariable = {
  */
 export class Envaridator {
   private registeredVariables: RegisteredVariable = {};
+  private postValidations: Rule[] = [];
 
-  private status(failedVariables: string[]) {
+  private variablesStatus(failedVariables: string[]) {
     failedVariables.unshift('The following environment variables are invalid:\n');
     const data = failedVariables.join('\n');
+    return data;
+  }
+
+  private rulesStatus(failedRules: string[]) {
+    failedRules.unshift('The following validation rules are invalid:\n');
+    const data = failedRules.join('\n');
     return data;
   }
 
@@ -42,13 +50,23 @@ export class Envaridator {
   }
 
   /**
-   * Iterates over {@link registeredVariables} and
-   * calls the validator function on every {@link Envar}.
-   * If the variables are successfully validated, it returns
-   * {@link registeredVariables}.
+   * registerPostValidation adds a validation rule which is run after all variable validations.
+   * It should be used to validate rules on the whole config i.e. for migrating of an environment variable.
    *
-   * In case one or more variables fail their validation,
-   * it returns {@link failedVariables} instead.
+   * @param description Short description for the rule. It prints out when an error is found
+   * @param validator function which should throw if the config is not validated
+   */
+  registerPostValidation(description: string, validator: PostValidator) {
+    const rule = new Rule(description, validator);
+    this.postValidations.push(rule);
+  }
+
+  /**
+   * Iterates over {@link registeredVariables} and {@link postValidations} and
+   * calls the validator function on every {@link Envar}.
+   *
+   * In case one or more variables or rules fail their validation,
+   * it prints out which {@link failedVariables} and {@link failedRules} failed.
    */
   validate() {
     let failedVariables: string[] = [];
@@ -61,8 +79,30 @@ export class Envaridator {
       }
     });
 
+    let failedRules: string[] = [];
+
+    if (this.postValidations.length > 0) {
+      this.postValidations.forEach(rule => {
+        try {
+          rule.validate();
+        } catch (validationError) {
+          failedRules.push(validationError.message);
+        }
+      });
+    }
+
+    let result = '';
     if (failedVariables.length > 0) {
-      throw new Error(this.status(failedVariables));
+      result += this.variablesStatus(failedVariables);
+    }
+
+    if (failedRules.length > 0) {
+      result += '\n\n';
+      result += this.rulesStatus(failedRules);
+    }
+
+    if (result) {
+      throw new Error(result);
     }
   }
 
@@ -70,18 +110,34 @@ export class Envaridator {
    * Describe all registered environment variables
    */
   describeAll() {
-    return Object.keys(this.registeredVariables)
-      .map(name => `${name} - ${this.registeredVariables[name].description}`)
-      .join('\n');
+    const envars = Object.keys(this.registeredVariables).map(
+      name => `${name} - ${this.registeredVariables[name].description}`,
+    );
+
+    const rules = this.postValidations.map(rule => rule.description);
+
+    return [...envars, ...rules].join('\n');
   }
 
   /**
    * Describe all registered environment variables with some markdown flavor
    */
   describeAllMarkdown() {
-    return Object.keys(this.registeredVariables)
-      .map(name => `**${name}** - ${this.registeredVariables[name].description}  `)
+    const envars = Object.keys(this.registeredVariables)
+      .map(name => `**${name}** - ${this.registeredVariables[name].description}`)
       .join('\n');
+
+    const rules = this.postValidations.map(rule => rule.description).join('\n');
+
+    let result: string[] = [];
+    if (envars.length > 0) {
+      result.push('#Variables', envars);
+    }
+    if (rules.length > 0) {
+      result.push('#Post validation rules', rules);
+    }
+
+    return result.join('\n');
   }
 }
 
@@ -92,35 +148,42 @@ export class Envaridator {
  */
 export class Envar<T> {
   constructor(
-    private _name: string,
-    private _validator: Validator<T>,
-    private _description: string
+    readonly name: string,
+    private readonly validator: Validator<T>,
+    readonly description: string,
   ) {}
 
   private cache: { empty: true } | { value: T } = { empty: true };
 
   private validate() {
     if ('empty' in this.cache) {
-      const value: string | undefined = process.env[this._name];
-      this.cache = { value: this._validator(value) };
+      const value: string | undefined = process.env[this.name];
+      this.cache = { value: this.validator(value) };
     }
 
     return this.cache.value;
-  }
-
-  get name() {
-    return this._name;
   }
 
   get value() {
     try {
       return this.validate();
     } catch (error) {
-      throw new Error(`${this._name} - ${error.message}`);
+      throw new Error(`${this.name} - ${error.message}`);
     }
   }
+}
 
-  get description() {
-    return this._description;
+/**
+ * Instantiates a new rule for validation.
+ */
+export class Rule {
+  constructor(readonly description: string, readonly validator: PostValidator) {}
+
+  validate() {
+    try {
+      return this.validator();
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

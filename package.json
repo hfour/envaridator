@@ -4,8 +4,7 @@
   "description": "Environment variable validator for TypeScript",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^10.12.7",
     "@toi/toix": "^1.0.6",
@@ -21,6 +20,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "coverage": "jest --coverage",
+    "prettier:fix": "prettier --write **/*.ts **/*.tsx '**/*.md' packages/**/*.json **/*.js",
     "prepare": "tsc"
   },
   "bugs": {
@@ -40,7 +40,7 @@
   "files": [
     "build/index.js",
     "build/index.d.ts"
-],
+  ],
   "author": "Hristijan Lubeski",
   "license": "MIT",
   "homepage": "https://github.com/hfour/envaridator#README.md",
@@ -54,6 +54,9 @@
         "statements": -10
       }
     },
-    "testPathIgnorePatterns":["<rootDir>/build/", "<rootDir>/node_modules/"]
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/"
+    ]
   }
 }
