@@ -63,13 +63,11 @@ export class Envaridator {
   }
 
   /**
-   * Iterates over {@link registeredVariables} and
+   * Iterates over {@link registeredVariables} and {@link postValidations} and
    * calls the validator function on every {@link Envar}.
-   * If the variables are successfully validated, it returns
-   * {@link registeredVariables}.
    *
-   * In case one or more variables fail their validation,
-   * it returns {@link failedVariables} instead.
+   * In case one or more variables or rules fail their validation,
+   * it prints out which {@link failedVariables} and {@link failedRules} failed.
    */
   validate() {
     let failedVariables: string[] = [];
@@ -82,22 +80,30 @@ export class Envaridator {
       }
     });
 
-    if (failedVariables.length > 0) {
-      throw new Error(this.variablesStatus(failedVariables));
-    }
+    let failedRules: string[] = [];
 
     if (this.postValidations.length > 0) {
       this.postValidations.forEach(rule => {
         try {
           rule.validate();
         } catch (validationError) {
-          failedVariables.push(validationError.message);
+          failedRules.push(validationError.message);
         }
       });
     }
 
+    let result = '';
     if (failedVariables.length > 0) {
-      throw new Error(this.rulesStatus(failedVariables));
+      result += this.variablesStatus(failedVariables);
+    }
+
+    if (failedRules.length > 0) {
+      result += '\n\n';
+      result += this.rulesStatus(failedRules);
+    }
+
+    if (result) {
+      throw new Error(result);
     }
   }
 
