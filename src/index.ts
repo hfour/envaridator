@@ -53,9 +53,8 @@ export class Envaridator {
    * registerPostValidation adds a validation rule which is run after all variable validations.
    * It should be used to validate rules on the whole config i.e. for migrating of an environment variable.
    *
-   * @param name the name of the environment variable
+   * @param description Short description for the rule. It prints out when an error is found
    * @param validator function which should throw if the config is not validated
-   * @param description string describing the variable
    */
   registerPostValidation(description: string, validator: PostValidator) {
     const rule = new Rule(description, validator);
@@ -175,9 +174,7 @@ export class Envar<T> {
 }
 
 /**
- * When an environment variable is being registered,
- * it's name, value, and validator are assigned to
- * a {@link Envar} object for later use.
+ * Instantiates a new rule for validation.
  */
 export class Rule {
   constructor(readonly description: string, readonly validator: PostValidator) {}
