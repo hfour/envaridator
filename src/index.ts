@@ -110,11 +110,13 @@ export class Envaridator {
    * Describe all registered environment variables
    */
   describeAll() {
-    const envars = Object.keys(this.registeredVariables).map(
-      name => `${name} - ${this.registeredVariables[name].description}`,
-    );
+    const envars = Object.keys(this.registeredVariables)
+      .map(name => `${name} - ${this.registeredVariables[name].description}`)
+      .sort((a, b) => a.localeCompare(b));
 
-    const rules = this.postValidations.map(rule => rule.description);
+    const rules = this.postValidations
+      .map(rule => rule.description)
+      .sort((a, b) => a.localeCompare(b));
 
     return [...envars, ...rules].join('\n');
   }
@@ -125,9 +127,13 @@ export class Envaridator {
   describeAllMarkdown() {
     const envars = Object.keys(this.registeredVariables)
       .map(name => `**${name}** - ${this.registeredVariables[name].description}`)
+      .sort((a, b) => a.localeCompare(b))
       .join('\n');
 
-    const rules = this.postValidations.map(rule => rule.description).join('\n');
+    const rules = this.postValidations
+      .map(rule => rule.description)
+      .sort((a, b) => a.localeCompare(b))
+      .join('\n');
 
     let result: string[] = [];
     if (envars.length > 0) {

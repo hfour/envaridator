@@ -130,18 +130,19 @@ it('should throw if a post validation rule fails', () => {
   );
 });
 
-it('should describe all registered variables and rules', () => {
+it('should describe all registered variables and rules, sorted alphabetically', () => {
   const envaridator = new Envaridator();
-  envaridator.register(
-    'VAR_1',
-    toi.required(),
-    'The first variable. Must be configured correctly.',
-  );
   envaridator.register(
     'VAR_2',
     toi.required(),
     'The second variable. Must be configured correctly.',
   );
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.',
+  );
+
   envaridator.registerPostValidation('The first rule. Must be configured correctly.', () => {});
   expect(envaridator.describeAll()).toMatchInlineSnapshot(`
 "VAR_1 - The first variable. Must be configured correctly.
@@ -150,17 +151,17 @@ The first rule. Must be configured correctly."
 `);
 });
 
-it('should describe all registered variables with some markdown formatting', () => {
+it('should describe all registered variables with some markdown formatting, sorted alphabetically', () => {
   const envaridator = new Envaridator();
-  envaridator.register(
-    'VAR_1',
-    toi.required(),
-    'The first variable. Must be configured correctly.',
-  );
   envaridator.register(
     'VAR_2',
     toi.required(),
     'The second variable. Must be configured correctly.',
+  );
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.',
   );
   envaridator.register(
     'VAR_3',
@@ -175,7 +176,7 @@ it('should describe all registered variables with some markdown formatting', () 
 `);
 });
 
-it('should describe all rules with some markdown formatting', () => {
+it('should describe all rules with some markdown formatting, sorted alphabetically', () => {
   const envaridator = new Envaridator();
   envaridator.registerPostValidation('The first rule. Must be configured correctly.', () => {});
   expect(envaridator.describeAllMarkdown()).toMatchInlineSnapshot(`
@@ -184,17 +185,17 @@ The first rule. Must be configured correctly."
 `);
 });
 
-it('should describe all registered variables and rules with some markdown formatting', () => {
+it('should describe all registered variables and rules with some markdown formatting, sorted alphabetically', () => {
   const envaridator = new Envaridator();
-  envaridator.register(
-    'VAR_1',
-    toi.required(),
-    'The first variable. Must be configured correctly.',
-  );
   envaridator.register(
     'VAR_2',
     toi.required(),
     'The second variable. Must be configured correctly.',
+  );
+  envaridator.register(
+    'VAR_1',
+    toi.required(),
+    'The first variable. Must be configured correctly.',
   );
   envaridator.register(
     'VAR_3',
