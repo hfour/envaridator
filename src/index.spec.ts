@@ -143,11 +143,14 @@ it('should describe all registered variables and rules, sorted alphabetically', 
     'The first variable. Must be configured correctly.',
   );
 
+  envaridator.registerPostValidation('The second rule. Must be configured correctly.', () => {});
   envaridator.registerPostValidation('The first rule. Must be configured correctly.', () => {});
+
   expect(envaridator.describeAll()).toMatchInlineSnapshot(`
 "VAR_1 - The first variable. Must be configured correctly.
 VAR_2 - The second variable. Must be configured correctly.
-The first rule. Must be configured correctly."
+The first rule. Must be configured correctly.
+The second rule. Must be configured correctly."
 `);
 });
 
@@ -178,10 +181,13 @@ it('should describe all registered variables with some markdown formatting, sort
 
 it('should describe all rules with some markdown formatting, sorted alphabetically', () => {
   const envaridator = new Envaridator();
+  envaridator.registerPostValidation('The second rule. Must be configured correctly.', () => {});
   envaridator.registerPostValidation('The first rule. Must be configured correctly.', () => {});
+
   expect(envaridator.describeAllMarkdown()).toMatchInlineSnapshot(`
 "#Post validation rules
-The first rule. Must be configured correctly."
+The first rule. Must be configured correctly.
+The second rule. Must be configured correctly."
 `);
 });
 
