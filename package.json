@@ -41,7 +41,7 @@
     "build/index.js",
     "build/index.d.ts"
   ],
-  "author": "Hristijan Lubeski",
+  "author": "hfour",
   "license": "MIT",
   "homepage": "https://github.com/hfour/envaridator#README.md",
   "jest": {
